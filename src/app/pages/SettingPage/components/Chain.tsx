@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { toggleToken } from 'app/pages/SettingPage/slice/walletReducer';
 import { RootState } from 'types/RootState';
+import { selectAtChain } from '../slice/selectors';
 
 const CustomBadge = ({ invisible }) => {
   return (
@@ -20,7 +21,6 @@ const Item = ({
   handleClick,
   isChain,
   invisible,
-  chainName,
   color,
 }) => {
   return (
@@ -44,7 +44,6 @@ const Item = ({
         </div>
         {isChain ? (
           <>
-            <Typography>{chainName}</Typography>
             <CustomBadge invisible={invisible} />
           </>
         ) : null}
@@ -71,7 +70,6 @@ export const TokenList = ({ chainId }) => {
           handleClick={() => handleToggleToken(index)}
           isChain={false}
           invisible={false}
-          chainName={''}
           color={token.on ? 'orange' : ''}
         />
       ))}
@@ -80,21 +78,18 @@ export const TokenList = ({ chainId }) => {
 };
 
 const Chain = ({ chain, handleClick }) => {
-  const imgPath = `/assets/images/chains/${chain.name}.png`;
-  const atChainId = useSelector(
-    (state: RootState) => state.chainInfo.chainData.atChain
-  );
+  // const imgPath = `/assets/images/chains/${chain.name}.png`;
+  const atChainId = useSelector(selectAtChain);
 
   // TODO validate wallet address
   const inv = !chain.walletAddress;
   const chainColor = chain.id === atChainId ? 'orange' : '';
   return (
     <Item
-      imgPath={imgPath}
+      imgPath={chain.logo}
       handleClick={handleClick}
       isChain={true}
       invisible={inv}
-      chainName={''}
       color={chainColor}
     />
   );

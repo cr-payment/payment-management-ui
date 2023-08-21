@@ -6,8 +6,16 @@ import {
 } from 'app/pages/SettingPage/slice/infoReducer';
 import React from 'react';
 import { RootState } from 'types';
-import { Button, Grid, Switch, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { selectAuth } from 'app/pages/LoginPage/slice/selectors';
+import { selectEmail, selectNotification } from '../slice/selectors';
 
 const PasswordField = ({ title, defaultVal, name }) => {
   return (
@@ -21,16 +29,15 @@ const PasswordField = ({ title, defaultVal, name }) => {
           defaultValue={defaultVal}
           type="password"
           size="small"
+          sx={{width:300}}
         />{' '}
-      </Grid>
+      </Grid> 
     </Grid>
   );
 };
 // TODO retype password
 const PasswordForm = () => {
   const dispatch = useDispatch();
-
-  const password = useSelector((state: RootState) => state.info.password);
 
   const handleChangePassword = (event) => {
     event.preventDefault();
@@ -39,12 +46,19 @@ const PasswordForm = () => {
   };
   return (
     <form onSubmit={handleChangePassword}>
-      <PasswordField title="Password" defaultVal={password} name="password" />
+      <PasswordField
+        title="Password"
+        defaultVal="passwordpassword"
+        name="password"
+      />
+      <Box flexGrow={15} my={2}></Box>
       <PasswordField
         title="Retype password"
-        defaultVal={password}
+        defaultVal="passwordpassword"
         name="retype"
       />
+      <Box flexGrow={15} my={2}></Box>
+
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={6}></Grid>
         <Grid item xs={12} sm={6} md={6}>
@@ -59,12 +73,14 @@ const PasswordForm = () => {
 
 const Notif = () => {
   const dispatch = useDispatch();
-  const checked = useSelector((state: RootState) => state.info.notification);
+  const checked = useSelector(selectNotification);
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={6} md={6}>
-        <h3>Notification email</h3>
-        <div>Receive notification emails from successful payments</div>
+        <Typography variant="h6">Notification email</Typography>
+        <Typography variant="body1">
+          Receive notification emails from successful payments
+        </Typography>
       </Grid>
       <Grid item xs={12} sm={6} md={6}>
         <Switch
@@ -77,13 +93,8 @@ const Notif = () => {
 };
 
 const Info = () => {
-  // const email = useSelector((state : RootState) => state.info.email);
   const { actions } = useInfoSlice();
-
-  const email = useSelector((state: RootState) => state.info.email);
-  // const userEmail = useSelector(
-  //   (state: RootState) => state.auth.dataAuth?.email,
-  // );
+  const email = useSelector(selectEmail);
 
   return (
     <div>
@@ -98,10 +109,13 @@ const Info = () => {
             type="text"
             size="small"
             disabled
+            sx={{width:300}}
           />
         </Grid>
       </Grid>
+      <Box flexGrow={15} my={2}></Box>
       <PasswordForm />
+      <Box flexGrow={15} my={2}></Box>
       <Notif />
     </div>
   );

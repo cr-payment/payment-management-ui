@@ -1,8 +1,9 @@
-// import { createSelector } from '@reduxjs/toolkit';
-// import { RootState } from 'types';
-// import { initialState } from '.';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from 'types';
 
-// const selectSlice = (state: RootState) => state?.auth || initialState;
-
-// export const selectAuth = createSelector([selectSlice], (state) => state);
-export {};
+const selectChainSlice = (state: RootState) => state.chainInfo.chainData;
+export const selectChainList = createSelector([selectChainSlice], (state) => state.chains);
+export const selectAtChain = createSelector([selectChainSlice], (state) => state.atChain);
+const selectInfoSlice = (state: RootState) => state.info;
+export const selectNotification = createSelector([selectInfoSlice], (state) => state.notification);
+export const selectEmail = createSelector([selectInfoSlice], (state) => state.email);

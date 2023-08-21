@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { RootState } from 'types';
-import { Button, Grid, TextField } from '@mui/material';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import Chain, { TokenList } from './Chain';
 import {
   switchChain,
@@ -9,12 +9,11 @@ import {
   useWalletSlice,
   addWalletRequest,
 } from 'app/pages/SettingPage/slice/walletReducer';
-import { chainType } from 'app/pages/SettingPage/slice/walletReducer';
+import { chainType } from 'app/pages/SettingPage/slice/types';
+import { selectAtChain, selectChainList } from '../slice/selectors';
 // xử lí lưu vào store khi thay đổi
 const WalletAddress = ({ chainId }) => {
-  const chainList: chainType[] = useSelector(
-    (state: RootState) => state.chainInfo.chainData.chains
-  );
+  const chainList: chainType[] = useSelector(selectChainList);
   const chain: chainType | undefined = chainList.find(
     (chain) => chain.id === chainId
   );
@@ -45,7 +44,7 @@ const WalletAddress = ({ chainId }) => {
     <form onSubmit={handleSaveAddress}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <h3>Wallet address</h3>
+          <Typography variant="h4">Wallet address</Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -54,9 +53,12 @@ const WalletAddress = ({ chainId }) => {
             onChange={handleWalletAddressChange}
             type="text"
             size="small"
+            sx={{width:300}}
+
           />
         </Grid>
       </Grid>
+      <Box flexGrow={15} my={2}></Box>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}></Grid>
         <Grid item xs={12} sm={6}>
@@ -70,13 +72,10 @@ const WalletAddress = ({ chainId }) => {
 };
 
 const WalletSection = () => {
+
   const { actions } = useWalletSlice();
-  const chainList: chainType[] = useSelector(
-    (state: RootState) => state.chainInfo.chainData.chains
-  );
-  const atChainId = useSelector(
-    (state: RootState) => state.chainInfo.chainData.atChain
-  );
+  const chainList: chainType[] = useSelector(selectChainList);
+  const atChainId = useSelector(selectAtChain);
   const dispatch = useDispatch();
   const handleChain = (chainId: number) => {
     // TODO dispatch change info of chain -> tokens accepted
@@ -85,7 +84,8 @@ const WalletSection = () => {
 
   return (
     <div>
-      <h2>Supported chains</h2>
+      <Typography variant="h4">Supported chains</Typography>
+      <Box flexGrow={15} my={2}></Box>
       <Grid container spacing={2}>
         {chainList.map((chain) => (
           <Chain
@@ -95,8 +95,10 @@ const WalletSection = () => {
           />
         ))}
       </Grid>
+      <Box flexGrow={15} my={2}></Box>
       <WalletAddress chainId={atChainId} />
-      <h2>Choose tokens to pay</h2>
+      <Typography variant="h4">Choose tokens to pay</Typography>
+      <Box flexGrow={15} my={2}></Box>
       <TokenList chainId={atChainId} />
     </div>
   );

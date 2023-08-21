@@ -7,7 +7,7 @@ import { AuthState } from 'app/pages/LoginPage/slice/types';
   You have to declare them here manually
 */
 import { InfoState } from 'app/pages/SettingPage/slice/infoReducer';
-import { ChainInfoState } from 'app/pages/SettingPage/slice/walletReducer';
+import { ChainInfoState } from 'app/pages/SettingPage/slice/types';
 
 export interface RootState {
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly

@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
 import { useInjectReducer } from 'redux-injectors';
-import { RootState } from 'types';
 export interface InfoState {
   email: string;
   password: string;

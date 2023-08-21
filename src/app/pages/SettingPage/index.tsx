@@ -8,18 +8,25 @@ import Info from './components/Info';
 import WalletSection from './components/WalletSection';
 import * as React from 'react';
 import Bill from '../ProjectPagePopup/components/Bill';
+import { selectAuth } from '../LoginPage/slice/selectors';
+import { useSelector } from 'react-redux';
+import { Box, Typography } from '@mui/material';
 
-interface Props {}
-
-export function SettingPage(props: Props) {
+export function SettingPage() {
+  // TODO if not authed, redirect to login page
+  const { loading, dataAuth, error } = useSelector(selectAuth);
+  if (!dataAuth) {
+    window.location.href = '/login';
+  }
   return (
     <div>
-      {/* TODO button for bill popup*/}
-      {/* <button onClick={()=>{}}>Bill</button> */}
       <Bill></Bill>
-      <h1>Settings</h1>
+      <Typography variant="h3">Settings</Typography>
+      <Box flexGrow={15} my={2}></Box>
       <Info />
-      <h1>Wallets</h1>
+      <Box flexGrow={15} my={2}></Box>
+      <Typography variant="h3">Wallets</Typography>
+      <Box flexGrow={15} my={2}></Box>
       <WalletSection />
     </div>
   );

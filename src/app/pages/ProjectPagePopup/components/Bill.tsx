@@ -64,20 +64,6 @@ export default function Bill() {
       >
         <DialogTitle id="scroll-dialog-title">Billing Information</DialogTitle>
         <DialogContent dividers={scroll === 'paper'}>
-          {/* <DialogContentText
-            id="scroll-dialog-description"
-            ref={descriptionElementRef}
-            tabIndex={-1}
-          >
-            {[...new Array(2)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-              )
-              .join('\n')}
-          </DialogContentText> */}
           <Grid container spacing={5}>
             <Grid item xs={6}>
               <InfoLine label="Name" value={billInfo.name} />

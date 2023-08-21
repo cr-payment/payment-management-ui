@@ -1,3 +1,4 @@
+
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -7,7 +8,7 @@ import axios, {
 
 export const baseURL = process.env.REACT_APP_API_URL;
 
-const baseApiRequest: AxiosInstance = axios.create({
+const authedApiRequest: AxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     Accept: 'application/json',
@@ -16,19 +17,25 @@ const baseApiRequest: AxiosInstance = axios.create({
   },
 });
 
-baseApiRequest.interceptors.response.use(
+authedApiRequest.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    const newConfig = { ...config };
+    const user = localStorage.getItem('cr-payment_user') || '{}';
+    const access_token = JSON.parse(user)?.token;
+    newConfig.headers['Authorization'] = 'Bearer ' + access_token;
+    return newConfig;
+  }
+);
+
+authedApiRequest.interceptors.response.use(
   (response: AxiosResponse) => {
     return response.data;
   },
   (error: AxiosError) => {
     if (error && error.response && error.response.status === 401) {
-      // remove token
-      // console.log(error.response.data.messages[0].message);
-      // toast.error(error.response.data.messages[0].message);
-      //   store.dispatch({ type: "walletAddress/logoutSuccess" })
     }
     throw error;
   }
 );
 
-export default baseApiRequest;
+export default authedApiRequest;

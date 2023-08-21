@@ -1,79 +1,19 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
-import { AddWalletRequest, AddWalletResponse } from './types';
-import { addWalletSaga } from './saga';
-export interface chainType {
-  id: number;
-  name: string;
-  walletAddress: string;
-  tokens: tokenType[];
+import {
+  AddWalletRequest,
+  AddWalletResponse,
+  ChainData,
+  ChainInfoState,
+  CurrencyConfigResponse,
+  chainType,
+} from './types';
+import { addWalletSaga, fetchChainsSaga } from './saga';
+const initialChainInfoState: ChainData ={
+  chains: [],
+  atChain: 1
 }
 
-export interface tokenType {
-  name: string;
-  on: boolean;
-}
-export interface ChainData {
-  chains: chainType[];
-  atChain: number;
-}
-
-export interface ChainInfoState {
-  loading: boolean;
-  chainData: ChainData;
-  error: boolean;
-}
-
-// export interface ChainInfoState {
-//   chains: chainType[];
-//   atChain: number;
-// }
-const initialChainInfoState: ChainData = {
-  chains: [
-    {
-      id: 1,
-      name: 'Ethereum',
-      walletAddress: '',
-      tokens: [
-        {
-          name: 'USDT',
-          on: true,
-        },
-        {
-          name: 'ETH',
-          on: true,
-        },
-        {
-          name: 'SHIB',
-          on: true,
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Solana',
-      walletAddress: '',
-      tokens: [
-        {
-          name: 'SOL',
-          on: true,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: 'BSC',
-      walletAddress: '',
-      tokens: [
-        {
-          name: 'BNB',
-          on: true,
-        },
-      ],
-    },
-  ],
-  atChain: 1,
-};
 const initialState: ChainInfoState = {
   loading: false,
   chainData: initialChainInfoState,
@@ -110,15 +50,6 @@ const walletSlice = createSlice({
       }
     },
     addWalletRequest(state, action: PayloadAction<AddWalletRequest>) {
-      // const { networkId, walletAddress } = action.payload;
-      // // network có trong bảng nào
-      // const chain = state.chainData.chains.find((chain) => chain.id === networkId);
-      // if (chain !== undefined) {
-      //   chain.walletAddress = walletAddress;
-      //   console.log(walletAddress);
-      // }
-      // gửi request, cập nhật state local
-      // đợi response từ server
       state.loading = true;
       state.error = false;
     },
@@ -141,18 +72,45 @@ const walletSlice = createSlice({
       state.loading = false;
       state.error = true;
     },
+    fetchChainsRequest(state) {
+      state.loading = true;
+      state.error = false;
+    },
+    fetchChainsSuccess(state, action: PayloadAction<CurrencyConfigResponse>) {
+      state.loading = false;
+      state.error = false;
+      // state.chainData = action.payload.data;
+      // map data từ response về dạng ChainData
+      console.log(action.payload.data)
+      const mappedChains:chainType[] = action.payload.data.map((payloadData) => {
+        return {
+          id: payloadData.swapId,
+          chainId: payloadData.chainId,
+          name: payloadData.chainName,
+          logo: payloadData.chainLogo,
+          walletAddress: '',
+          tokens: [],
+        };
+      });
+      state.chainData.chains = mappedChains;
+    },
+    fetchChainsError(state) {
+      state.loading = false;
+      state.error = true;
+    },
   },
 });
 export const useWalletSlice = () => {
   useInjectReducer({ key: walletSlice.name, reducer: walletSlice.reducer });
   useInjectSaga({ key: walletSlice.name, saga: addWalletSaga });
+  useInjectSaga({ key: 'key', saga: fetchChainsSaga });
   return { actions: walletSlice.actions };
 };
 
-export const { actions: addWalletActions } = walletSlice;
+export const { actions: walletActions } = walletSlice;
 
 // TODO khai báo selector để dùng sẵn type của useAppSelector
 
-export const { switchChain, changeAddress, toggleToken, addWalletRequest } =
+export const { switchChain, changeAddress, toggleToken, addWalletRequest, fetchChainsRequest,fetchChainsSuccess,fetchChainsError } =
   walletSlice.actions;
 export default walletSlice.reducer;

@@ -9,11 +9,13 @@ import { selectAuth } from 'app/pages/LoginPage/slice/selectors';
 import { useAuthSlice } from 'app/pages/LoginPage/slice';
 import { AuthRequest } from 'app/pages/LoginPage/slice/types';
 import { changeEmail } from 'app/pages/SettingPage/slice/infoReducer';
+import { useWalletSlice } from 'app/pages/SettingPage/slice/walletReducer';
 
 export default function LoginForm() {
   const { loading, dataAuth, error } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const { actions } = useAuthSlice();
+  const { actions: walletActions } = useWalletSlice();
 
   const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ export default function LoginForm() {
       password,
     };
     dispatch(actions.loginRequest(body));
+    dispatch(walletActions.fetchChainsRequest());
     dispatch(changeEmail(email));
   };
 
