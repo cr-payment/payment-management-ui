@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
@@ -34,11 +33,11 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-Header.propTypes = {
-  onOpenNav: PropTypes.func,
-};
+interface IHeaderProps {
+  onOpenNav: () => void;
+}
 
-export default function Header({ onOpenNav }) {
+export default function Header({ onOpenNav }: IHeaderProps) {
   return (
     <StyledRoot>
       <StyledToolbar>

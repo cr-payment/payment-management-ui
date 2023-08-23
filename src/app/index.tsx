@@ -42,7 +42,7 @@ export function App() {
           <Route path="projects" element={<ListProjectPage />} />
           <Route path="project/:id" element={<ProjectPage />} />
           <Route path="project/create" element={<AddEditProjectPage />} />
-          <Route path="project/edit" element={<AddEditProjectPage />} />
+          <Route path="project/edit/:id" element={<AddEditProjectPage />} />
           <Route path="setting" element={<SettingPage />} />
         </Route>
         <Route path="/" element={<SimpleLayout />}>

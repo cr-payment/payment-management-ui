@@ -11,6 +11,11 @@ const authApi = {
     const url = 'user/logout';
     return baseApiRequest.post(url);
   },
+
+  updatePassword(body: AuthRequest) {
+    const url = 'user/update-password';
+    return baseApiRequest.post(url, body);
+  },
 };
 
 export default authApi;

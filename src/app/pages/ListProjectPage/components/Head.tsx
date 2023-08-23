@@ -1,6 +1,11 @@
+import {
+  Box,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+} from '@mui/material';
 import React, { ChangeEvent, MouseEvent } from 'react';
-import { Box, Checkbox } from '@mui/material';
-import { TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 
 interface ITableHead {
   id: string;
@@ -15,7 +20,7 @@ interface IHeadProps {
   headLabel: ITableHead[];
   numSelected: number;
   onRequestSort: (property: string) => void;
-  onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
+  onSelectAllClick?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const visuallyHidden = {

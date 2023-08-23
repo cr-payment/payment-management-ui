@@ -9,9 +9,9 @@
 // Update your breakpoints if you want
 export const sizes = {
   small: 600,
-  medium: 1024,
-  large: 1440,
-  xlarge: 1920,
+  medium: 900,
+  large: 1024,
+  xlarge: 1440,
 };
 
 // Iterate through the sizes and create min-width media queries

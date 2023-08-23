@@ -5,6 +5,7 @@ import { Card, CardHeader, Box } from '@mui/material';
 // components
 import { useChart } from '../../../components/Chart';
 import React from 'react';
+import { fShortenNumber } from 'utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -26,14 +27,15 @@ export default function AppWebsiteVisits({
     plotOptions: { bar: { columnWidth: '16%' } },
     fill: { type: chartData.map((i) => i.fill) },
     labels: chartLabels,
-    xaxis: { type: 'datetime' },
+    // xaxis: { type: 'datetime' },
     tooltip: {
       shared: true,
       intersect: false,
       y: {
         formatter: (y) => {
           if (typeof y !== 'undefined') {
-            return `$${y.toFixed(0)}`;
+            // return `$${y.toFixed(0)}`;
+            return fShortenNumber(y);
           }
           return y;
         },

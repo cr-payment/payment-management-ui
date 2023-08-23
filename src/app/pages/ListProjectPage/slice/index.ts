@@ -3,10 +3,12 @@ import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { projectsSaga } from './saga';
 import { ProjectsState } from './types';
+import projects from '_mock/project';
+import { Project } from 'app/pages/ProjectPage/slice/types';
 
 export const initialState: ProjectsState = {
   loading: false,
-  dataProjects: [],
+  dataProjects: [...projects],
   error: false,
 };
 
@@ -18,9 +20,14 @@ const slice = createSlice({
       state.loading = true;
       state.error = false;
     },
-    getProjectsSuccess(state, action: PayloadAction<any[]>) {
+    getProjectsSuccess(state, action: PayloadAction<Project[]>) {
       state.loading = false;
-      state.dataProjects = action.payload;
+      const newProjects = [...action.payload, ...projects];
+      const uniqueProjects = newProjects.filter(
+        (project, index, self) =>
+          index === self.findIndex((p) => p.id === project.id)
+      );
+      state.dataProjects = uniqueProjects;
     },
     getProjectsError(state) {
       state.loading = false;

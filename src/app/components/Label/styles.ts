@@ -72,4 +72,4 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }: any) => {
     ...colorStyle,
     ...defaultStyle,
   };
-});
+}) as any;

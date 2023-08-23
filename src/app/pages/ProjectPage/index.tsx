@@ -4,45 +4,61 @@
  *
  */
 
-import { alpha, styled } from '@mui/material/styles';
+import { faker } from '@faker-js/faker';
 import {
   Avatar,
   Box,
-  Popover,
+  Button,
+  Card,
   Grid,
   IconButton,
+  MenuItem,
   Paper,
+  Popover,
   Stack,
   Table,
-  Card,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  MenuItem,
-  Typography,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
-import USERLIST from '_mock/user';
-import { Iconify, Label } from 'app/components';
-import { sentenceCase } from 'change-case';
+import { alpha, styled } from '@mui/material/styles';
+import { Iconify, Loading } from 'app/components';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import AppWidgetSummary from '../DashboardAppPage/components/AppWidgetSummary';
-import { useDispatch } from 'react-redux';
 import { useProjectSlice } from './slice';
-import { useParams } from 'react-router-dom';
+import { selectProject } from './slice/selectors';
 
 interface Props {}
 
 export function ProjectPage(props: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [page, setPage] = useState<number>(0);
-  const [filterName, setFilterName] = useState<string>('');
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
+  const { loading, dataPayments, dataProject } = useSelector(selectProject);
   const dispatch = useDispatch();
   const { actions } = useProjectSlice();
+
+  const stats = [
+    {
+      title: 'Total Earned',
+      total: +faker.finance.amount(1000, 10000, 2),
+      icon: 'solar:dollar-linear',
+    },
+    {
+      title: 'Total Orders',
+      total: dataPayments.length,
+      icon: 'solar:bill-check-linear',
+    },
+  ];
+
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -69,15 +85,15 @@ export function ProjectPage(props: Props) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataPayments.length) : 0;
 
-  const isNotFound = !USERLIST.length && !!filterName;
+  const isNotFound = !dataPayments.length;
 
   return (
-    <div>
+    <Box sx={{ p: 3 }}>
       <Grid container spacing={3}>
         {stats.map((stat, index) => (
-          <Grid item key={index} xs={12} sm={6} md={3}>
+          <Grid item key={index} xs={6} md={3}>
             <AppWidgetSummary
               title={stat.title}
               total={stat.total}
@@ -85,7 +101,7 @@ export function ProjectPage(props: Props) {
             />
           </Grid>
         ))}
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} md={6}>
           <Card
             sx={{
               py: 5,
@@ -108,7 +124,7 @@ export function ProjectPage(props: Props) {
                 }}
               >
                 <Typography variant="h6">API Public Key: </Typography>
-                <Typography variant="body2">123456789 </Typography>
+                <Typography variant="body2">{dataProject?.apiKey} </Typography>
                 <Iconify icon="ph:eye-light" width={25} />
               </Box>
               <Box
@@ -119,7 +135,7 @@ export function ProjectPage(props: Props) {
                 }}
               >
                 <Typography variant="h6">Webhook URL: </Typography>
-                <Typography variant="body2">example.com.vn</Typography>
+                <Typography variant="body2">{dataProject?.webHook}</Typography>
               </Box>
             </Box>
 
@@ -141,7 +157,24 @@ export function ProjectPage(props: Props) {
         </Grid>
       </Grid>
 
-      <Card sx={{ mt: 3 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        my={5}
+      >
+        <Typography variant="h4" gutterBottom>
+          Payment
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<Iconify icon="eva:edit-fill" />}
+          onClick={() => navigate(`/project/edit/${id}`)}
+        >
+          Edit Project
+        </Button>
+      </Stack>
+      <Card sx={{ mt: 3, overflow: 'auto' }}>
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
             <TableHead>
@@ -158,57 +191,54 @@ export function ProjectPage(props: Props) {
             </TableHead>
 
             <TableBody>
-              {USERLIST.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              ).map((row) => {
-                const {
-                  id,
-                  name,
-                  earn,
-                  createAt,
-                  transaction,
-                  avatarUrl,
-                  type,
-                } = row;
+              {dataPayments
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const {
+                    amount,
+                    avatarUrl,
+                    createdAt,
+                    currency,
+                    transactionHash,
+                    name,
+                  } = row;
 
-                return (
-                  <TableRow hover key={id} tabIndex={-1} role="checkbox">
-                    <TableCell component="th" scope="row">
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Avatar alt={name} src={avatarUrl} />
-                        <Typography variant="subtitle2" noWrap>
-                          {name}
-                        </Typography>
-                      </Stack>
-                    </TableCell>
+                  return (
+                    <TableRow hover key={index} tabIndex={-1} role="checkbox">
+                      <TableCell component="th" scope="row">
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                          <Avatar alt={name} src={avatarUrl} />
+                          <Typography variant="subtitle2" noWrap>
+                            {name}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
 
-                    <TableCell align="left">{transaction}</TableCell>
+                      <TableCell align="left">
+                        {`${transactionHash?.slice(
+                          0,
+                          6
+                        )}...${transactionHash?.slice(-4)}`}
+                      </TableCell>
 
-                    <TableCell align="left">{earn}</TableCell>
+                      <TableCell align="left">{currency}</TableCell>
 
-                    <TableCell align="left">{type ? 'Yes' : 'No'}</TableCell>
+                      <TableCell align="left">{amount}</TableCell>
 
-                    <TableCell align="left">
-                      <Label
-                        color={(createAt === 'banned' && 'error') || 'success'}
-                      >
-                        {sentenceCase(createAt || '')}
-                      </Label>
-                    </TableCell>
+                      <TableCell align="left">{createdAt}</TableCell>
 
-                    <TableCell align="right">
-                      <IconButton
-                        size="large"
-                        color="inherit"
-                        onClick={handleOpenMenu}
-                      >
-                        <Iconify icon={'ic:outline-find-in-page'} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      <TableCell align="right">
+                        <IconButton
+                          size="large"
+                          color="inherit"
+                          onClick={handleOpenMenu}
+                        >
+                          <Iconify icon={'ic:outline-find-in-page'} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
@@ -226,8 +256,7 @@ export function ProjectPage(props: Props) {
                       </Typography>
 
                       <Typography variant="body2">
-                        No results found for &nbsp;
-                        <strong>&quot;{filterName}&quot;</strong>.
+                        No results found.
                         <br /> Try checking for typos or using complete words.
                       </Typography>
                     </Paper>
@@ -240,7 +269,7 @@ export function ProjectPage(props: Props) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={dataPayments.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -279,7 +308,9 @@ export function ProjectPage(props: Props) {
           Delete
         </MenuItem>
       </Popover>
-    </div>
+
+      {loading && <Loading />}
+    </Box>
   );
 }
 
@@ -293,16 +324,11 @@ const StyledIcon = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const stats = [
-  { title: 'Total Earned', total: 10, icon: 'solar:dollar-linear' },
-  { title: 'Total Orders', total: 10, icon: 'solar:bill-check-linear' },
-];
-
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'transactionHash', label: 'Transaction Hash', alignRight: false },
   { id: 'currency', label: 'Currency', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'createAt', label: 'Create At', alignRight: false },
+  { id: 'createdAt', label: 'Create At', alignRight: false },
   { id: 'detail', label: 'Detail', alignRight: false },
 ];

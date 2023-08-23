@@ -1,4 +1,4 @@
-import { CreateProjectRequest } from 'app/pages/AddEditProjectPage/slice/types';
+import { CreateProjectRequest } from 'app/pages/ProjectPage/slice/types';
 import baseApiRequest from './baseApiRequest';
 
 const projectApi = {

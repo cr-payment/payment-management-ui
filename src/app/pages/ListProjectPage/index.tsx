@@ -9,27 +9,35 @@ import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState } from 'react';
 import { Card, Table, Stack, Paper, MenuItem, TableBody } from '@mui/material';
-import { Avatar, Button, Popover, Checkbox, TableRow } from '@mui/material';
+import { Avatar, Button, Popover, TableRow } from '@mui/material';
 import { TableCell, Container, Typography } from '@mui/material';
 import { IconButton, TableContainer, TablePagination } from '@mui/material';
-import { Iconify, Label } from 'app/components';
-import USERLIST from '_mock/user';
+import { Iconify, Label, Loading } from 'app/components';
+import USERLIST from '_mock/project';
 import {
   Head as ProjectListHead,
   Toolbar as ProjectListToolbar,
 } from './components';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useProjectsSlice } from './slice';
+import { Project } from '../ProjectPage/slice/types';
+import { selectProjects } from './slice/selectors';
 
 interface Props {}
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'transaction', label: 'Transaction', alignRight: false },
-  { id: 'earn', label: 'Earned ($)', alignRight: false },
+interface ITableHead {
+  id: keyof Project | '';
+  label?: string;
+  alignRight?: boolean;
+}
+
+const TABLE_HEAD: ITableHead[] = [
+  { id: 'projectName', label: 'Name', alignRight: false },
+  { id: 'noTransaction', label: 'Transaction', alignRight: false },
+  { id: 'totalEarned', label: 'Earned ($)', alignRight: false },
   { id: 'type', label: 'Type', alignRight: false },
-  { id: 'createAt', label: 'Create At', alignRight: false },
+  { id: 'createdAt', label: 'Create At', alignRight: false },
   { id: '' },
 ];
 
@@ -66,7 +74,10 @@ function applySortFilter(array, comparator, query) {
 }
 
 export function ListProjectPage(props: Props) {
-  const [open, setOpen] = useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState<{
+    anchorEl: HTMLButtonElement | null;
+    id: string;
+  }>({ anchorEl: null, id: '' });
   const [page, setPage] = useState<number>(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<string[]>([]);
@@ -75,6 +86,7 @@ export function ListProjectPage(props: Props) {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
   const navigate = useNavigate();
+  const { loading, dataProjects } = useSelector(selectProjects);
   const dispatch = useDispatch();
   const { actions } = useProjectsSlice();
 
@@ -82,12 +94,17 @@ export function ListProjectPage(props: Props) {
     dispatch(actions.getProjectsRequest());
   }, [actions, dispatch]);
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(event.currentTarget);
+  const handleOpenMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string | undefined
+  ) => {
+    if (id) {
+      setOpen({ anchorEl: event.currentTarget, id });
+    }
   };
 
   const handleCloseMenu = () => {
-    setOpen(null);
+    setOpen({ anchorEl: null, id: '' });
   };
 
   const handleRequestSort = (property: string) => {
@@ -96,32 +113,32 @@ export function ListProjectPage(props: Props) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = USERLIST.map((n) => n.projectName);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+  // const handleClick = (event, name) => {
+  //   const selectedIndex = selected.indexOf(name);
+  //   let newSelected: string[] = [];
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1)
+  //     );
+  //   }
+  //   setSelected(newSelected);
+  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -140,13 +157,13 @@ export function ListProjectPage(props: Props) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(
-    USERLIST,
+  const filteredProjects = applySortFilter(
+    dataProjects,
     getComparator(order, orderBy),
     filterName
   );
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = !filteredProjects.length && !!filterName;
 
   return (
     <>
@@ -190,23 +207,23 @@ export function ListProjectPage(props: Props) {
                 rowCount={USERLIST.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
-                onSelectAllClick={handleSelectAllClick}
+                // onSelectAllClick={handleSelectAllClick}
               />
               <TableBody>
-                {filteredUsers
+                {filteredProjects
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
+                  .map((row: Project) => {
                     const {
                       id,
-                      name,
-                      earn,
-                      createAt,
-                      transaction,
+                      projectName,
+                      totalEarned,
+                      createdAt,
+                      noTransaction,
                       avatarUrl,
                       type,
                     } = row;
 
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    // const selectedUser = selected.indexOf(projectName) !== -1;
 
                     return (
                       <TableRow
@@ -214,9 +231,7 @@ export function ListProjectPage(props: Props) {
                         key={id}
                         tabIndex={-1}
                         role="checkbox"
-                        selected={selectedUser}
-                        onClick={(event) => navigate(`/project/${id}`)}
-                        sx={{ cursor: 'pointer' }}
+                        // selected={selectedUser}
                       >
                         {/* <TableCell padding="checkbox">
                           <Checkbox
@@ -231,36 +246,37 @@ export function ListProjectPage(props: Props) {
                             alignItems="center"
                             spacing={2}
                           >
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar alt={projectName} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {projectName}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{transaction}</TableCell>
+                        <TableCell align="left">{noTransaction}</TableCell>
 
-                        <TableCell align="left">{earn}</TableCell>
-
-                        <TableCell align="left">
-                          {type ? 'Yes' : 'No'}
-                        </TableCell>
+                        <TableCell align="left">{totalEarned}</TableCell>
 
                         <TableCell align="left">
                           <Label
                             color={
-                              (createAt === 'banned' && 'error') || 'success'
+                              (type === 'Payment' && 'success') || 'primary'
                             }
                           >
-                            {sentenceCase(createAt)}
+                            {sentenceCase(type || '')}
                           </Label>
+                        </TableCell>
+
+                        <TableCell align="left">
+                          {/* {type ? 'Yes' : 'No'} */}
+                          {createdAt}
                         </TableCell>
 
                         <TableCell align="right">
                           <IconButton
                             size="large"
                             color="inherit"
-                            onClick={handleOpenMenu}
+                            onClick={(event) => handleOpenMenu(event, id)}
                           >
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
@@ -311,8 +327,8 @@ export function ListProjectPage(props: Props) {
       </Container>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
+        open={Boolean(open.id)}
+        anchorEl={open.anchorEl}
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -320,7 +336,7 @@ export function ListProjectPage(props: Props) {
           paper: {
             sx: {
               p: 1,
-              width: 140,
+              width: 160,
               '& .MuiMenuItem-root': {
                 px: 1,
                 typography: 'body2',
@@ -330,9 +346,19 @@ export function ListProjectPage(props: Props) {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => navigate(`/project/${open.id}`)}>
+          <Iconify icon={'eva:info-outline'} sx={{ mr: 2 }} />
+          Detail
+        </MenuItem>
+
+        <MenuItem onClick={() => navigate(`/project/edit/${open.id}`)}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
+        </MenuItem>
+
+        <MenuItem>
+          <Iconify icon={'ph:currency-btc-bold'} sx={{ mr: 2 }} />
+          Add currency
         </MenuItem>
 
         <MenuItem sx={{ color: 'error.main' }}>
@@ -340,6 +366,8 @@ export function ListProjectPage(props: Props) {
           Delete
         </MenuItem>
       </Popover>
+
+      {loading && <Loading />}
     </>
   );
 }

@@ -15,22 +15,22 @@ interface Props {}
 export function DashboardAppPage(props: Props) {
   const theme = useTheme();
   const projectList = [
-    { label: 'Project A', value: 4344 },
-    { label: 'Project B', value: 5435 },
-    { label: 'Project C', value: 1443 },
-    { label: 'Project D', value: 1443 },
-    { label: 'Project E', value: 1443 },
+    { label: 'Larson - Kutch', value: 5344 },
+    { label: 'Willms LLC', value: 4435 },
+    { label: 'Lubowitz Group', value: 1443 },
+    { label: 'Kassulke - Homenick', value: 1103 },
+    { label: 'Other', value: 943 },
   ];
   // TODO fetch "total" field from API
   const stats = [
     {
       title: 'Total Projects',
-      total: projectList.length,
+      total: 26,
       icon: 'mdi:shopping-outline',
     },
-    { title: 'Total Earned', total: 10, icon: 'solar:dollar-linear' },
-    { title: 'Total Orders', total: 10, icon: 'solar:bill-check-linear' },
-    { title: 'Earned this month', total: 10, icon: 'solar:dollar-linear' },
+    { title: 'Total Earned', total: 144663, icon: 'solar:dollar-linear' },
+    { title: 'Total Orders', total: 167, icon: 'solar:bill-check-linear' },
+    { title: 'Earned this month', total: 6845, icon: 'solar:dollar-linear' },
   ];
 
   const defaultColors = [
@@ -67,26 +67,21 @@ export function DashboardAppPage(props: Props) {
             title="Total Earned"
             subheader={undefined}
             chartLabels={[
-              '01/02/2023',
-              '02/02/2023',
-              '03/02/2023',
-              '04/02/2023',
-              '05/02/2023',
-              '06/02/2023',
-              '07/02/2023',
-              '08/02/2023',
-              '09/02/2023',
-              '10/02/2023',
-              '11/02/2023',
-              '12/02/2023',
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'Jun',
+              'Jul',
+              'Aug',
             ]}
             chartData={[
               {
                 name: 'Month total',
                 type: 'column',
                 fill: 'solid',
-                // data được lưu ntn?
-                data: [23, 11],
+                data: [19262, 15346, 21035, 20134, 15243, 19262, 13346, 21035],
               },
             ]}
           />

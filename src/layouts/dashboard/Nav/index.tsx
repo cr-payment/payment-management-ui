@@ -1,11 +1,15 @@
 import { Avatar, Box, Drawer, Link, Typography } from '@mui/material';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import account from '_mock/account';
 import { Logo, NavSection, Scrollbar } from 'app/components';
 import React from 'react';
 import navConfig from './config';
 
-// ----------------------------------------------------------------------
+interface INavProps {
+  openNav: boolean;
+  onCloseNav: () => void;
+}
 
 const NAV_WIDTH = 280;
 
@@ -17,9 +21,10 @@ const StyledAccount = styled('div')(({ theme }) => ({
   backgroundColor: alpha(theme.palette.grey[500], 0.12),
 }));
 
-// ----------------------------------------------------------------------
+export default function Nav({ openNav, onCloseNav }: INavProps) {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
 
-export default function Nav() {
   const renderContent = (
     <Scrollbar
       sx={{
@@ -64,19 +69,34 @@ export default function Nav() {
       component="nav"
       sx={{ flexShrink: { lg: 0 }, width: { lg: NAV_WIDTH } }}
     >
-      <Drawer
-        open
-        variant="permanent"
-        PaperProps={{
-          sx: {
-            width: NAV_WIDTH,
-            bgcolor: 'background.default',
-            borderRightStyle: 'dashed',
-          },
-        }}
-      >
-        {renderContent}
-      </Drawer>
+      {isDesktop ? (
+        <Drawer
+          open
+          variant="permanent"
+          PaperProps={{
+            sx: {
+              width: NAV_WIDTH,
+              bgcolor: 'background.default',
+              borderRightStyle: 'dashed',
+            },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      ) : (
+        <Drawer
+          open={openNav}
+          onClose={onCloseNav}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          PaperProps={{
+            sx: { width: NAV_WIDTH },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      )}
     </Box>
   );
 }

@@ -1,5 +1,4 @@
 // [IMPORT NEW CONTAINERSTATE ABOVE]
-import { AddEditProjectState } from 'app/pages/AddEditProjectPage/slice/types';
 import { ProjectsState } from 'app/pages/ListProjectPage/slice/types';
 import { AuthState } from 'app/pages/LoginPage/slice/types';
 import { ProjectState } from 'app/pages/ProjectPage/slice/types';
@@ -19,5 +18,4 @@ export interface RootState {
   info: InfoState;
   chainInfo: ChainInfoState;
   bill: BillState;
-  addEditProject: AddEditProjectState;
 }

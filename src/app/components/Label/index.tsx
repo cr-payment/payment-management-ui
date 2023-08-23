@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -7,14 +6,21 @@ import { Box } from '@mui/material';
 import { StyledLabel } from './styles';
 import React from 'react';
 
-// interface Props {
-//   children: React.ReactNode;
-//   color?: string;
-//   variant?: string;
-//   startIcon?: React.ReactNode;
-//   endIcon?: React.ReactNode;
-//   sx?: object;
-// }
+interface Props {
+  children: React.ReactNode;
+  color?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'error';
+  variant?: 'filled' | 'outlined' | 'ghost' | 'soft';
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  sx?: object;
+}
 
 export const Label = forwardRef(
   (
@@ -26,7 +32,7 @@ export const Label = forwardRef(
       endIcon,
       sx,
       ...other
-    }: any,
+    }: Props,
     ref
   ) => {
     const theme = useTheme();
@@ -59,20 +65,3 @@ export const Label = forwardRef(
     );
   }
 );
-
-Label.propTypes = {
-  sx: PropTypes.object,
-  endIcon: PropTypes.node,
-  children: PropTypes.node,
-  startIcon: PropTypes.node,
-  variant: PropTypes.oneOf(['filled', 'outlined', 'ghost', 'soft']),
-  color: PropTypes.oneOf([
-    'default',
-    'primary',
-    'secondary',
-    'info',
-    'success',
-    'warning',
-    'error',
-  ]),
-};

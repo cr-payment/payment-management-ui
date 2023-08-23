@@ -30,6 +30,8 @@ const infoSlice = createSlice({
   },
 });
 
+export const { actions: infoActions } = infoSlice;
+
 export const useInfoSlice = () => {
   useInjectReducer({ key: infoSlice.name, reducer: infoSlice.reducer });
   return { actions: infoSlice.actions };
