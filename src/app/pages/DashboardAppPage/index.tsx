@@ -28,7 +28,7 @@ export function DashboardAppPage(props: Props) {
       total: 26,
       icon: 'mdi:shopping-outline',
     },
-    { title: 'Total Earned', total: 144663, icon: 'solar:dollar-linear' },
+    { title: 'Total Earned ($)', total: 144663, icon: 'solar:dollar-linear' },
     { title: 'Total Orders', total: 167, icon: 'solar:bill-check-linear' },
     { title: 'Earned this month', total: 6845, icon: 'solar:dollar-linear' },
   ];

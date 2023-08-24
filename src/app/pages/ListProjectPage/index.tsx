@@ -356,11 +356,6 @@ export function ListProjectPage(props: Props) {
           Edit
         </MenuItem>
 
-        <MenuItem>
-          <Iconify icon={'ph:currency-btc-bold'} sx={{ mr: 2 }} />
-          Add currency
-        </MenuItem>
-
         <MenuItem sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
