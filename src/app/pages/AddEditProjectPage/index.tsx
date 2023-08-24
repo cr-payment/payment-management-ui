@@ -182,7 +182,7 @@ export function AddEditProjectPage(props: Props) {
 
       <Dialog open={openPreview} onClose={handleClosePreview} maxWidth="lg">
         <img
-          src={process.env.PUBLIC_URL + '/assets/images/covers/cover_1.jpg'}
+          src={process.env.PUBLIC_URL + '/assets/preview.png'}
           alt="preview"
         />
       </Dialog>
