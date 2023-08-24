@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { RootState } from 'types';
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import Chain, { TokenList } from './Chain';
 import {
   switchChain,
@@ -39,23 +39,21 @@ const WalletAddress = ({ chainId }) => {
 
   return (
     <form onSubmit={handleSaveAddress}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <h3>Wallet address</h3>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid item xs={6}>
+          <Typography variant="h4" sx={{ p: 0 }}>
+            Wallet address
+          </Typography>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6}>
           <TextField
             name="walletAddress"
             value={walletAddress}
             onChange={handleWalletAddressChange}
             type="text"
             size="small"
+            sx={{ mr: 2 }}
           />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}></Grid>
-        <Grid item xs={12} sm={6}>
           <Button variant="contained" color="primary" type="submit">
             Save
           </Button>
@@ -90,7 +88,7 @@ const WalletSection = () => {
         ))}
       </Grid>
       <WalletAddress chainId={atChainId} />
-      <h2>Choose tokens to pay</h2>
+      <h2>Choose tokens to receive</h2>
       <TokenList chainId={atChainId} />
     </div>
   );

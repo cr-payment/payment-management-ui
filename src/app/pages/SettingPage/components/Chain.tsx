@@ -24,11 +24,12 @@ const Item = ({
   color,
 }) => {
   return (
-    <Grid item xs={12} sm={4} md={2}>
+    <Grid item xs={12} sm={4} md={1.5}>
       <Button
         // elevation={3}
         variant="outlined"
         onClick={handleClick}
+        fullWidth
         sx={{
           display: 'flex',
           alignItems: 'center',
