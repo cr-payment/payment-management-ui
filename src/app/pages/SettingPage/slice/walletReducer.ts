@@ -22,41 +22,46 @@ const initialState: ChainInfoState = {
       name: 'Ethereum',
       walletAddress: '0x1234567890',
       tokens: [
-        {
-          name: 'USDT',
-          on: true,
-        },
-        {
-          name: 'ETH',
-          on: true,
-        },
-        {
-          name: 'SHIB',
-          on: true,
-        },
+        { name: 'USDT', on: true },
+        { name: 'ETH', on: true },
+        { name: 'SHIB', on: true },
       ],
     },
     {
       id: 2,
       name: 'Solana',
       walletAddress: '',
-      tokens: [
-        {
-          name: 'SOL',
-          on: true,
-        },
-      ],
+      tokens: [{ name: 'SOL', on: true }],
     },
     {
       id: 3,
       name: 'BSC',
       walletAddress: '0x1234567895',
-      tokens: [
-        {
-          name: 'BNB',
-          on: true,
-        },
-      ],
+      tokens: [{ name: 'BNB', on: true }],
+    },
+    {
+      id: 4,
+      name: 'Polygon',
+      walletAddress: '0x1234567896',
+      tokens: [{ name: 'MATIC', on: true }],
+    },
+    {
+      id: 5,
+      name: 'Near',
+      walletAddress: '0x1234567897',
+      tokens: [{ name: 'NEAR', on: true }],
+    },
+    {
+      id: 6,
+      name: 'Polkadot',
+      walletAddress: '0x1234567898',
+      tokens: [{ name: 'DOT', on: true }],
+    },
+    {
+      id: 7,
+      name: 'Sui',
+      walletAddress: '0x1234567898',
+      tokens: [{ name: 'SUI', on: true }],
     },
   ],
   atChain: 1,

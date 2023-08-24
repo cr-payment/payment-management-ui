@@ -4,7 +4,7 @@
  *
  */
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Grid } from '@mui/material';
+import { Dialog, Grid } from '@mui/material';
 import { Box, Button, Input, OutlinedInput, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ interface Props {}
 
 export function AddEditProjectPage(props: Props) {
   const [logo, setLogo] = useState<File | null>(null);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
 
   const { loading, dataAddProject } = useSelector(selectProject);
   const dispatch = useDispatch();
@@ -61,6 +62,14 @@ export function AddEditProjectPage(props: Props) {
     if (file) {
       setLogo(file);
     }
+  };
+
+  const handleOpenPreview = () => {
+    setOpenPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setOpenPreview(false);
   };
 
   return (
@@ -157,6 +166,12 @@ export function AddEditProjectPage(props: Props) {
 
       <Box sx={{ textAlign: 'center' }}>
         <Button
+          children="Preview"
+          variant="contained"
+          sx={{ mr: 5 }}
+          onClick={handleOpenPreview}
+        />
+        <Button
           children={id ? 'Update' : 'Create Project'}
           type="submit"
           variant="contained"
@@ -164,6 +179,13 @@ export function AddEditProjectPage(props: Props) {
       </Box>
 
       {loading && <Loading />}
+
+      <Dialog open={openPreview} onClose={handleClosePreview} maxWidth="lg">
+        <img
+          src={process.env.PUBLIC_URL + '/assets/images/covers/cover_1.jpg'}
+          alt="preview"
+        />
+      </Dialog>
     </Box>
   );
 }

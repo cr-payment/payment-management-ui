@@ -8,7 +8,6 @@ import { faker } from '@faker-js/faker';
 import {
   Avatar,
   Box,
-  Button,
   Card,
   Grid,
   IconButton,
@@ -148,7 +147,9 @@ export function ProjectPage(props: Props) {
                       theme.palette.primary.dark,
                       0
                     )} 0%, ${alpha(theme.palette.primary.dark, 0.24)} 100%)`,
+                  cursor: 'pointer',
                 }}
+                onClick={() => navigate(`/project/edit/${id}`)}
               >
                 <Iconify icon="ep:setting" width={24} />
               </StyledIcon>
@@ -157,23 +158,6 @@ export function ProjectPage(props: Props) {
         </Grid>
       </Grid>
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        my={5}
-      >
-        <Typography variant="h4" gutterBottom>
-          Payment
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-          onClick={() => navigate(`/project/edit/${id}`)}
-        >
-          Edit Project
-        </Button>
-      </Stack>
       <Card sx={{ mt: 3, overflow: 'auto' }}>
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
