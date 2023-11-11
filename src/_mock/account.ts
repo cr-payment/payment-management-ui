@@ -2,9 +2,9 @@
 
 const account = {
   displayName: 'Jaydon Frankie',
-  email: 'demo@minimals.cc',
+  email: 'frankie.jaydon@gmail.com',
   photoURL: '/assets/images/avatars/avatar_default.jpg',
-  role: 'Ph.D',
+  role: 'Manager',
 };
 
 export default account;

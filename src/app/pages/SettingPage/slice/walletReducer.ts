@@ -19,49 +19,24 @@ const initialState: ChainInfoState = {
   chains: [
     {
       id: 1,
-      name: 'Ethereum',
-      walletAddress: '0x1234567890',
-      tokens: [
-        { name: 'USDT', on: true },
-        { name: 'ETH', on: true },
-        { name: 'SHIB', on: true },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Solana',
-      walletAddress: '',
-      tokens: [{ name: 'SOL', on: true }],
-    },
-    {
-      id: 3,
-      name: 'BSC',
-      walletAddress: '0x1234567895',
-      tokens: [{ name: 'BNB', on: true }],
-    },
-    {
-      id: 4,
-      name: 'Polygon',
-      walletAddress: '0x1234567896',
-      tokens: [{ name: 'MATIC', on: true }],
-    },
-    {
-      id: 5,
-      name: 'Near',
-      walletAddress: '0x1234567897',
-      tokens: [{ name: 'NEAR', on: true }],
-    },
-    {
-      id: 6,
-      name: 'Polkadot',
-      walletAddress: '0x1234567898',
-      tokens: [{ name: 'DOT', on: true }],
-    },
-    {
-      id: 7,
       name: 'Sui',
-      walletAddress: '0x1234567898',
-      tokens: [{ name: 'SUI', on: true }],
+      walletAddress:
+        '0x12345678980xb5a4b7ed9c2a51a9baacf7dd53a8835be0694633a75da3f6ae3b5cdebafe052d',
+      tokens: [
+        { name: 'SUI', on: true },
+        {
+          name: 'USDT',
+          on: false,
+        },
+        {
+          name: 'USDC',
+          on: false,
+        },
+        {
+          name: 'DAI',
+          on: false,
+        },
+      ],
     },
   ],
   atChain: 1,

@@ -7,7 +7,7 @@ export interface InfoState {
 }
 
 const initialState: InfoState = {
-  email: 'myemail@gmail.com',
+  email: 'frankie.jaydon@gmail.com',
   password: 'mypassword',
   notification: true,
 };

@@ -10,7 +10,7 @@ export const initialState: BillState = {
   loading: false,
   billData: {
     name: 'Lalala',
-    email: 'myemail@gmail.com',
+    email: 'frankie.jaydon@gmail.com',
     number: '0987654321',
     cart: [
       {

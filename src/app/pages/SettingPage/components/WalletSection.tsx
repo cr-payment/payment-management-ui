@@ -77,16 +77,6 @@ const WalletSection = () => {
 
   return (
     <div>
-      <h2>Supported chains</h2>
-      <Grid container spacing={2}>
-        {chainList.map((chain) => (
-          <Chain
-            key={chain.id}
-            chain={chain}
-            handleClick={() => handleChain(chain.id)}
-          />
-        ))}
-      </Grid>
       <WalletAddress chainId={atChainId} />
       <h2>Choose tokens to receive</h2>
       <TokenList chainId={atChainId} />
