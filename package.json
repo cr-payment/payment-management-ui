@@ -132,6 +132,8 @@
     }
   },
   "devDependencies": {
-    "@types/numeral": "2.0.2"
+    "@types/numeral": "2.0.2",
+    "change-case": "4.1.2",
+    "prop-types": "15.8.1"
   }
 }
